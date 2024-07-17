@@ -70,7 +70,7 @@ def add_permissions_to_role(
     permissions = role.get("permissions")
     if permissions is None:
         permissions = []
-    data = {"permissions": permissions + [perm]}
+    data = {"permissions": permissions + [perm], "name": role.get("name")}
     status, message = roles.update_role(base_wrapper, role_id, data)
     if status:
         print("\n[green]Role Updated![/green]")
@@ -88,7 +88,7 @@ def remove_permissions_from_role(
     if not status:
         print(f"\n[red]Error[/red]: {role}")
         return
-    data = {"permissions": [p for p in role.get("permissions") if p != perm]}
+    data = {"permissions": [p for p in role.get("permissions") if p != perm], "name": role.get("name")}
     status, message = roles.update_role(base_wrapper, role_id, data)
     if status:
         print("\n[green]Role Updated![/green]")

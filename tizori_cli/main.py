@@ -18,7 +18,7 @@ app.add_typer(applications_app, name="apps")
 @app.callback()
 def callback(ctx: Context):
     """
-    Welcome to CLI
+    Welcome to Tizori CLI
     """
     config = load_config()
     # Check if the base URL is set and command is not set-base-url
