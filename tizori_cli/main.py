@@ -1,4 +1,4 @@
-from typer import Typer, Abort, Context
+from typer import Typer, Abort, Context, echo
 from rich import print
 
 from tizori_cli.config import load_config, save_config
@@ -15,18 +15,39 @@ app.add_typer(roles_app, name="roles")
 app.add_typer(applications_app, name="apps")
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def callback(ctx: Context):
-    """
-    Welcome to Tizori CLI
-    """
     config = load_config()
-    # Check if the base URL is set and command is not set-base-url
-    if (config.get("base_url") == "" or config.get("base_url") is None) \
-        and ctx.invoked_subcommand != "set-base-url":
+
+    # Show help if no subcommand is provided
+    if ctx.invoked_subcommand is None:
+        print(
+            """
+     [white]███████████████╗[/white]                 
+    [white]███╔══════════███╗               
+   [white]███╔╝           ███╗      ████████╗██╗███████╗ ██████╗ ██████╗ ██╗[/white]           
+   [white]███║            ███║      ╚══██╔══╝██║╚══███╔╝██╔═══██╗██╔══██╗██║[/white]         
+   [white]███║            ███║         ██║   ██║  ███╔╝ ██║   ██║██████╔╝██║[/white]         
+[white]█████████████████████████╗      ██║   ██║ ███╔╝  ██║   ██║██╔══██╗██║[/white]        
+[white]█████████████████████████║      ██║   ██║███████╗╚██████╔╝██║  ██║██║[/white]      
+[white]██████████╔═════█████████║      ╚═╝   ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝[/white]    
+[white]██████████║     █████████║[/white]       
+[white]████████████╗ ███████████║[/white]      [bright_white]Developer:[/bright_white] [green]Dhruv Shah[/green]     
+[white]████████████║ ███████████║[/white]      [bright_white]Github:[/bright_white] [blue]https://github.com/Dhruv9449[/blue]      
+[white]████████████║ ███████████║[/white]      [bright_white]Repository:[/bright_white] [blue]https://github.com/Dhruv9449/tizori-cli[/blue]         
+[white]█████████████████████████║[/white]         
+[white]█████████████████████████║[/white]             
+[white]╚════════════════════════╝[/white]       
+"""
+        )
+        echo(ctx.get_help())
+
+    # Check if the base URL is setit and command is not set-base-url
+    if (config.get("base_url") == "" or config.get("base_url") is None) and ctx.invoked_subcommand != "set-base-url":
         print("\n[red]Base URL not set![/red]")
         print("Please set the base URL using the command: [bold blue]tizori set-base-url <URL>[/bold blue]")
         raise Abort()
+
 
 @app.command("set-base-url")
 def set_base_url(url: str):
