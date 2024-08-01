@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tizori-cli"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Dhruv Shah <dhruvshahrds@gmail.com>"]
 readme = "README.md"
