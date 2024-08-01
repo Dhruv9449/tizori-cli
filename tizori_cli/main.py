@@ -17,36 +17,42 @@ app.add_typer(applications_app, name="apps")
 
 @app.callback(invoke_without_command=True)
 def callback(ctx: Context):
-    config = load_config()
+    try:
+        config = load_config()
 
-    # Show help if no subcommand is provided
-    if ctx.invoked_subcommand is None:
-        print(
-            """
-     [white]███████████████╗[/white]                 
-    [white]███╔══════════███╗               
-   [white]███╔╝           ███╗      ████████╗██╗███████╗ ██████╗ ██████╗ ██╗[/white]           
-   [white]███║            ███║      ╚══██╔══╝██║╚══███╔╝██╔═══██╗██╔══██╗██║[/white]         
-   [white]███║            ███║         ██║   ██║  ███╔╝ ██║   ██║██████╔╝██║[/white]         
-[white]█████████████████████████╗      ██║   ██║ ███╔╝  ██║   ██║██╔══██╗██║[/white]        
-[white]█████████████████████████║      ██║   ██║███████╗╚██████╔╝██║  ██║██║[/white]      
-[white]██████████╔═════█████████║      ╚═╝   ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝[/white]    
-[white]██████████║     █████████║[/white]       
-[white]████████████╗ ███████████║[/white]      [bright_white]Developer:[/bright_white] [green]Dhruv Shah[/green]     
-[white]████████████║ ███████████║[/white]      [bright_white]Github:[/bright_white] [blue]https://github.com/Dhruv9449[/blue]      
-[white]████████████║ ███████████║[/white]      [bright_white]Repository:[/bright_white] [blue]https://github.com/Dhruv9449/tizori-cli[/blue]         
-[white]█████████████████████████║[/white]         
-[white]█████████████████████████║[/white]             
-[white]╚════════════════════════╝[/white]       
-"""
-        )
-        echo(ctx.get_help())
+        # Show help if no subcommand is provided
+        if ctx.invoked_subcommand is None:
+            print(
+                """
+        [white]███████████████╗[/white]                 
+        [white]███╔══════════███╗               
+    [white]███╔╝           ███╗      ████████╗██╗███████╗ ██████╗ ██████╗ ██╗[/white]           
+    [white]███║            ███║      ╚══██╔══╝██║╚══███╔╝██╔═══██╗██╔══██╗██║[/white]         
+    [white]███║            ███║         ██║   ██║  ███╔╝ ██║   ██║██████╔╝██║[/white]         
+    [white]█████████████████████████╗      ██║   ██║ ███╔╝  ██║   ██║██╔══██╗██║[/white]        
+    [white]█████████████████████████║      ██║   ██║███████╗╚██████╔╝██║  ██║██║[/white]      
+    [white]██████████╔═════█████████║      ╚═╝   ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝[/white]    
+    [white]██████████║     █████████║[/white]       
+    [white]████████████╗ ███████████║[/white]      [bright_white]Developer:[/bright_white] [green]Dhruv Shah[/green]     
+    [white]████████████║ ███████████║[/white]      [bright_white]Github:[/bright_white] [blue]https://github.com/Dhruv9449[/blue]      
+    [white]████████████║ ███████████║[/white]      [bright_white]Repository:[/bright_white] [blue]https://github.com/Dhruv9449/tizori-cli[/blue]         
+    [white]█████████████████████████║[/white]         
+    [white]█████████████████████████║[/white]             
+    [white]╚════════════════════════╝[/white]       
+    """
+            )
+            echo(ctx.get_help())
 
-    # Check if the base URL is setit and command is not set-base-url
-    if (config.get("base_url") == "" or config.get("base_url") is None) and ctx.invoked_subcommand != "set-base-url":
-        print("\n[red]Base URL not set![/red]")
-        print("Please set the base URL using the command: [bold blue]tizori set-base-url <URL>[/bold blue]")
-        raise Abort()
+        # Check if the base URL is setit and command is not set-base-url
+        if (
+            config.get("base_url") == "" or config.get("base_url") is None
+        ) and ctx.invoked_subcommand != "set-base-url":
+            print("\n[red]Base URL not set![/red]")
+            print("Please set the base URL using the command: [bold blue]tizori set-base-url <URL>[/bold blue]")
+            raise Abort()
+
+    except Exception as e:
+        print(f"\n[red]Error:[/red] {str(e)}")
 
 
 @app.command("set-base-url")
@@ -54,7 +60,18 @@ def set_base_url(url: str):
     """
     Set the base URL for the API
     """
-    config = load_config()
-    config["base_url"] = url
-    save_config(config)
-    print(f"\nBase URL set to: [bold blue]{url}[/bold blue]")
+    try:
+        config = load_config()
+        config["base_url"] = url
+        save_config(config)
+        print(f"\nBase URL set to: [bold blue]{url}[/bold blue]")
+    except Exception as e:
+        print(f"\n[red]Error:[/red] {str(e)}")
+
+
+if __name__ == "__main__":
+    try:
+        app()
+    except Exception as e:
+        print(f"\n[red]An unexpected error occurred: {e}[/red]")
+        raise Abort()
